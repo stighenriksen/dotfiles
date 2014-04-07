@@ -1,0 +1,30 @@
+function echo_message (window, message) {
+    window.minibuffer.message(message);
+}
+
+interactive("echo-message",
+    "echo adfx user-supplied message in the minibuffer",
+    function (I) {
+        echo_message(
+            I.window,
+            (yield I.minibuffer.read($prompt = "message: ")));
+    });
+
+// Mozrepl
+user_pref('extensions.mozrepl.autoStart', true);
+let (mozrepl_init = get_home_directory()) {
+    mozrepl_init.appendRelativePath(".mozrepl-conkeror.js");
+    session_pref('extensions.mozrepl.initUrl', make_uri(mozrepl_init).spec);
+}
+
+define_webjump("login-lastpass", "javascript:(function(){/*Click_This_Button_To_AutoLogin___Copyright_LastPass_all_rights_reserved*/_LASTPASS_INC=function(u,s){if(u.match(/_LASTPASS_RAND/)){alert('Cancelling_request_may_contain_randkey');return;}s=document.createElement('script');s.setAttribute('type','text/javascript');s.setAttribute('charset','UTF-8');s.setAttribute('src',u);if(typeof(window.attachEvent)!='undefined')document.body.appendChild(s);else{if(document.getElementsByTagName('head').length>0){document.getElementsByTagName('head').item(0).appendChild(s);}else{document.getElementsByTagName('body').item(0).appendChild(s);}}};_LASTPASS_RAND='ec451988f83f90dedb8508698f6a24c38d8da57437bd88b8ee45adc8803fed47';_LASTPASS_INC('https://lastpass.com/bml.php'+String.fromCharCode(63)+'v=0&a=1&r='+Math.random()+'&h=818f32ad35b99437e4607f4a7dcda72393877725f29e949d074c9d86beb4f70d&u='+escape(document.location.href));})();");
+
+define_webjump("lastpass-home", "chrome://lastpass/content/home.xul")
+define_webjump("lastpass-generate", "https://lastpass.com/generate")
+
+session_pref("xpinstall.whitelist.required", false);
+
+define_key(text_keymap, 'C-w', 'cmd_deleteWordBackward');
+
+modifiers.C = new modifier(function (event) { return event.altKey || event.ctrlKey; },
+                           function (event) { event.ctrlKey = true; });
